@@ -198,19 +198,52 @@
                  console.error("DEBUG: Failed to write log message to UI:", uiError);
              }
           }
-
-        // --- Initialize Sliders (Unchanged logic, relies on DOM) ---
+// --- Initialize Sliders (WITH CUSTOM SORT ORDER) ---
         function initializeSliders() {
              console.log("DEBUG: initializeSliders function entered.");
              if (!slidersContainer) { console.error("DEBUG: slidersContainer element NOT FOUND!"); logError("Internal Error: Cannot find slider container (#sliders).", true); return; }
              slidersContainer.innerHTML = ''; // Clear
+
              // Factors used for weighting (excluding ARR, EBITDA_Margin, GREM)
-             const weightedFactors = factors.filter(f => f.id !== 'ARR' && f.id !== 'EBITDA_Margin' && f.id !== 'GREM');
+             let weightedFactors = factors.filter(f => f.id !== 'ARR' && f.id !== 'EBITDA_Margin' && f.id !== 'GREM');
+
+             // --- Define desired order for specific factors ---
+             const desiredOrderIds = [
+                'VerticalFocusScore',     // Corresponds to "Social Architecture"
+                'LeadershipScore',        // Corresponds to "Strategy + Vision"
+                'ProductInnovationScore', // Corresponds to "Operational Effectiveness"
+                'TechnicalDebtScore'      // Corresponds to "Technical Architecture"
+             ];
+
+             // --- Sort factors for display order ---
+             weightedFactors.sort((a, b) => {
+                const indexA = desiredOrderIds.indexOf(a.id);
+                const indexB = desiredOrderIds.indexOf(b.id);
+
+                if (indexA !== -1 && indexB !== -1) {
+                    // Both are in the desired order list, sort by their index in that list
+                    return indexA - indexB;
+                } else if (indexA !== -1) {
+                    // Only 'a' is in the desired order list, it comes first
+                    return -1;
+                } else if (indexB !== -1) {
+                    // Only 'b' is in the desired order list, it comes first
+                    return 1;
+                } else {
+                    // Neither is in the desired order list, sort alphabetically by name
+                    return a.name.localeCompare(b.name);
+                }
+             });
+             // --- End Sorting ---
+
              if (weightedFactors.length === 0) { console.warn("DEBUG: No factors configured for sliders!"); return; }
-             console.log(`DEBUG: Found ${weightedFactors.length} factors for sliders. Creating...`);
+             console.log(`DEBUG: Found ${weightedFactors.length} factors for sliders. Creating in sorted order...`);
+
              factorWeights = {}; // Reset weights
+
+             // --- Create sliders based on the SORTED factor list ---
              weightedFactors.forEach((factor, index) => {
-                 // console.log(`DEBUG: Creating slider ${index + 1}: ${factor.id}`); // Verbose
+                 // console.log(`DEBUG: Creating slider ${index + 1}: ${factor.id} (${factor.name})`); // Verbose
                  const sliderItem = document.createElement('div'); sliderItem.classList.add('slider-item');
                  const label = document.createElement('label'); label.setAttribute('for', `slider-${factor.id}`); label.textContent = factor.name; // Use updated name
                  const slider = document.createElement('input'); slider.setAttribute('type', 'range'); slider.setAttribute('id', `slider-${factor.id}`); slider.setAttribute('min', '0'); slider.setAttribute('max', '10'); slider.setAttribute('value', factor.weight); slider.dataset.factorId = factor.id;
@@ -222,9 +255,11 @@
                  slidersContainer.appendChild(sliderItem);
                  factorWeights[factor.id] = factor.weight; // Initialize with default weight
              });
-             console.log("DEBUG: Sliders successfully created and appended.");
+
+             console.log("DEBUG: Sliders successfully created and appended in custom order.");
              console.log("DEBUG: Initial factorWeights:", JSON.stringify(factorWeights));
          }
+     
 
         // --- Event Listeners (Setup moved to DOMContentLoaded) ---
 
