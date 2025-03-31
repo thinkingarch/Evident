@@ -110,14 +110,7 @@
         let companyData = [];
         let factorWeights = {};
        const factors = [
-        // --- RENAMED ---
-        { id: 'VerticalFocusScore', name: 'Social Architecture', weight: 5, type: 'score', higherIsBetter: true, format: 'score' },
-        { id: 'LeadershipScore', name: 'Strategy + Vision', weight: 6, type: 'score', higherIsBetter: true, format: 'score' },
-        { id: 'ProductInnovationScore', name: 'Operational Effectiveness', weight: 6, type: 'score', higherIsBetter: true, format: 'score' },
-        // NOTE: ID remains 'TechnicalDebtScore', higherIsBetter remains false (lower score=less debt=better)
-        // The display name changes, but the underlying data meaning for this column is unchanged.
-        { id: 'TechnicalDebtScore', name: 'Technical Architecture', weight: 4, type: 'score', higherIsBetter: false, format: 'score' }
-        // --- /RENAMED ---
+        // ... other factors remain unchanged ...
         { id: 'ARR', name: 'ARR', weight: 8, type: 'metric', higherIsBetter: true, format: 'currency' },
         { id: 'EBITDA_Margin', name: 'EBITDA Margin', weight: 0, type: 'metric', higherIsBetter: true, format: 'percent' },
         { id: 'RevenueGrowth', name: 'Revenue Growth Rate', weight: 9, type: 'metric', higherIsBetter: true, format: 'percent' },
@@ -128,13 +121,21 @@
         { id: 'CAC_LTV_Ratio', name: 'CAC to LTV Ratio (LTV/CAC)', weight: 6, type: 'metric', higherIsBetter: true, format: 'number' },
         { id: 'MarketPositionScore', name: 'Market Position', weight: 7, type: 'score', higherIsBetter: true, format: 'score' },
         { id: 'TAM_Score', name: 'Addressable Market (TAM)', weight: 7, type: 'score', higherIsBetter: true, format: 'score' },
+        // --- RENAMED ---
+        { id: 'VerticalFocusScore', name: 'Social Architecture', weight: 5, type: 'score', higherIsBetter: true, format: 'score' },
+        { id: 'LeadershipScore', name: 'Strategy + Vision', weight: 6, type: 'score', higherIsBetter: true, format: 'score' },
+        { id: 'ProductInnovationScore', name: 'Operational Effectiveness', weight: 6, type: 'score', higherIsBetter: true, format: 'score' },
+        // --- /RENAMED ---
         { id: 'ContractVisibilityScore', name: 'Contract/Revenue Visibility', weight: 5, type: 'score', higherIsBetter: true, format: 'score' },
         { id: 'FinancialQualityScore', name: 'Quality of Financials', weight: 7, type: 'score', higherIsBetter: true, format: 'score' },
         { id: 'CashFlowScore', name: 'Cash Flow / Profitability', weight: 6, type: 'score', higherIsBetter: true, format: 'score' },
-        { id: 'ScalabilityScore', name: 'Platform Scalability', weight: 5, type: 'score', higherIsBetter: true, format: 'score' }, ];
-        const expectedColumns = [ 'CompanyName', 'ARR', 'EBITDA_Margin', 'RevenueGrowth', 'NRR', 'GRR', 'CustomerConcentration', 'CAC_LTV_Ratio', 'MarketPositionScore', 'TAM_Score', 'VerticalFocusScore', 'LeadershipScore', 'ProductInnovationScore', 'ContractVisibilityScore', 'FinancialQualityScore', 'CashFlowScore', 'ScalabilityScore', 'TechnicalDebtScore', 'Website', 'CompanyActivity', 'FounderName', 'FounderLinkedIn', 'MarketPotentialNotes', 'SynergiesNotes', 'ExitPotentialNotes' ];
-        const textColumns = [ 'CompanyName', 'Website', 'CompanyActivity', 'FounderName', 'FounderLinkedIn', 'MarketPotentialNotes', 'SynergiesNotes', 'ExitPotentialNotes' ];
-
+        { id: 'ScalabilityScore', name: 'Platform Scalability', weight: 5, type: 'score', higherIsBetter: true, format: 'score' },
+        // --- RENAMED ---
+        // NOTE: ID remains 'TechnicalDebtScore', higherIsBetter remains false (lower score=less debt=better)
+        // The display name changes, but the underlying data meaning for this column is unchanged.
+        { id: 'TechnicalDebtScore', name: 'Technical Architecture', weight: 4, type: 'score', higherIsBetter: false, format: 'score' }
+        // --- /RENAMED ---
+        ];
         // --- Formatting Helpers (Unchanged) ---
         const formatCurrency = (value) => typeof value !== 'number' || isNaN(value) ? 'N/A' : value >= 1000000 ? `$${(value / 1000000).toFixed(1)}M` : `$${(value / 1000).toFixed(0)}K`;
         const formatPercent = (value) => typeof value !== 'number' || isNaN(value) ? 'N/A' : `${(value * 100).toFixed(1)}%`;
